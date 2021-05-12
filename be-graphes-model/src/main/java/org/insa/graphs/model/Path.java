@@ -1,6 +1,7 @@
 package org.insa.graphs.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +37,34 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
-        return new Path(graph, arcs);
+        
+        if (nodes.size() == 1) {														//If there's only 1 node in list of nodes given
+        	return new Path(graph, nodes.get(0));
+        } else {
+            for (int i = 0; i < nodes.size() - 1; i++) {
+            	List<Arc> listarc = nodes.get(i).getSuccessors();						//List of Successors (arcs)
+            	double mintime = Double.MAX_VALUE;										//Max length to compare
+            	Arc fastarc = null;													//Shortest arc
+            	Arc arc = listarc.get(0);
+            	
+            	for (int j = 0; j < listarc.size(); j++) {
+            		arc = listarc.get(j);
+            		if ((arc.getDestination() == nodes.get(i + 1))						//If the arc correspond to the next node 
+            				&& arc.getMinimumTravelTime() < mintime)					//and it has the shorter length
+            		{
+            			mintime = arc.getMinimumTravelTime();
+            			fastarc = arc;													//Shortest arc 
+            		}
+            	}
+            	if (fastarc == null) {
+            		throw new IllegalArgumentException();
+            	} else {
+            		arcs.add(fastarc);
+            	}
+            }
+            
+            return new Path(graph, arcs);
+        }
     }
 
     /**
@@ -57,7 +85,35 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
-        return new Path(graph, arcs);
+        
+        if (nodes.size() == 1) {														//If there's only 1 node in list of nodes given
+        	return new Path(graph, nodes.get(0));
+        } else {
+            for (int i = 0; i < nodes.size() - 1; i++) {
+            	List<Arc> listarc = nodes.get(i).getSuccessors();						//List of Successors (arcs)
+            	float minlength = Float.MAX_VALUE;										//Max length to compare
+            	Arc shortarc = null;													//Shortest arc
+            	Arc arc = listarc.get(0);
+            	
+            	for (int j = 0; j < listarc.size(); j++) {
+            		arc = listarc.get(j);
+            		if ((arc.getDestination() == nodes.get(i + 1))						//If the arc correspond to the next node 
+            				&& arc.getLength() < minlength)								//and it has the shorter length
+            		{
+            			minlength = arc.getLength();
+            			shortarc = arc;													//Shortest arc 
+            		}
+            	}
+            	if (shortarc == null) {
+            		throw new IllegalArgumentException();
+            	} else {
+            		arcs.add(shortarc);
+            	}
+            }
+            
+            
+            return new Path(graph, arcs);
+        }
     }
 
     /**
@@ -198,11 +254,17 @@ public class Path {
      * 
      * @return true if the path is valid, false otherwise.
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public boolean isValid() {
         // TODO:
-        return false;
+    	if (this.arcs.isEmpty()) {
+    		return true;
+    	} else if (this.origin == arcs.get(0).getOrigin()) {
+    		return (arcs.get(0).getDestination() == arcs.get(1).getOrigin());
+    	} else {
+    		return false;
+    	}
     }
 
     /**
@@ -210,11 +272,20 @@ public class Path {
      * 
      * @return Total length of the path (in meters).
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public float getLength() {
         // TODO:
-        return 0;
+    	float len = 0;
+    	Iterator<Arc> iter = this.getArcs().iterator();
+    	while(iter.hasNext()) {
+    		len += iter.next().getLength();
+    	}
+    	
+//    	for (Arc arc : this.getArcs()) {
+//    		len += arc.getLength();
+//    	}
+        return len;
     }
 
     /**
@@ -225,11 +296,11 @@ public class Path {
      * @return Time (in seconds) required to travel this path at the given speed (in
      *         kilometers-per-hour).
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public double getTravelTime(double speed) {
         // TODO:
-        return 0;
+        return (this.getLength() / speed * 3.6);
     }
 
     /**
@@ -238,11 +309,22 @@ public class Path {
      * 
      * @return Minimum travel time to travel this path (in seconds).
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public double getMinimumTravelTime() {
         // TODO:
-        return 0;
+//    	double time = 0;
+//    	Iterator<Arc> iter = arcs.iterator();
+//    	while(iter.hasNext()) {
+//    		time += iter.next().getMinimumTravelTime();
+//    	}
+    	
+    	double time = 0;
+    	for (Arc arc : arcs) {
+    		time += arc.getLength() / arc.getRoadInformation().getMaximumSpeed() * 3.6;
+    	}
+    	
+        return time;
     }
 
 }
