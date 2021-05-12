@@ -43,29 +43,17 @@ public class Path {
         } else {
             for (int i = 0; i < nodes.size() - 1; i++) {
             	List<Arc> listarc = nodes.get(i).getSuccessors();						//List of Successors (arcs)
-<<<<<<< HEAD
             	double mintime = Double.MAX_VALUE;										//Max time to compare
             	Arc fastarc = null;														//Fastest arc
-=======
-            	double mintime = Double.MAX_VALUE;										//Max length to compare
-            	Arc fastarc = null;													//Shortest arc
->>>>>>> 02cfdce00ef4eaa0e3a751f712d0287d0d756123
             	Arc arc = listarc.get(0);
             	
             	for (int j = 0; j < listarc.size(); j++) {
             		arc = listarc.get(j);
             		if ((arc.getDestination() == nodes.get(i + 1))						//If the arc correspond to the next node 
-<<<<<<< HEAD
             				&& arc.getMinimumTravelTime() < mintime)					//and it has the faster time travel
             		{
             			mintime = arc.getMinimumTravelTime();
             			fastarc = arc;													//Fastest arc 
-=======
-            				&& arc.getMinimumTravelTime() < mintime)					//and it has the shorter length
-            		{
-            			mintime = arc.getMinimumTravelTime();
-            			fastarc = arc;													//Shortest arc 
->>>>>>> 02cfdce00ef4eaa0e3a751f712d0287d0d756123
             		}
             	}
             	if (fastarc == null) {
