@@ -50,7 +50,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         tas.insert(labels[data.getOrigin().getId()]);
         
         // Actual algorithm
-        while (!tas.isEmpty()) {
+        while (!tas.isEmpty() && !labels[data.getDestination().getId()].getMarque()) {
         	
         	//Extract the minimum node
         	Label labelorigin = tas.findMin();
@@ -58,6 +58,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             
             //Mark the node
             labels[node.getId()].setMarque(true);
+            notifyNodeMarked(node);
             for (Arc arc: node.getSuccessors()) {
                 
                 // Small test to check allowed roads and if the destination road isn't marked
@@ -70,21 +71,32 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 double oldCost = labels[arc.getDestination().getId()].getCost();
                 double newCost = labels[node.getId()].getCost() + w;
 
-                if (Double.isInfinite(oldCost) && Double.isFinite(newCost)) {
-                    notifyNodeReached(arc.getDestination());
-                    tas.insert(labels[arc.getDestination().getId()]);
-                }
-
-                // Check if new distances would be better, if so update...
+//                if (Double.isInfinite(oldCost) && Double.isFinite(newCost)) {
+//                    notifyNodeReached(arc.getDestination());
+//                    tas.insert(labels[arc.getDestination().getId()]);
+//                }
+//
+//                // Check if new distances would be better, if so update...
+//                if (newCost < oldCost) {
+//                    labels[arc.getDestination().getId()].setCost(newCost);
+//                    labels[arc.getDestination().getId()].setPere(arc);
+//                }
+                
+                
                 if (newCost < oldCost) {
-                    labels[arc.getDestination().getId()].setCost(newCost);
+                	if (!Double.isInfinite(oldCost)) {
+                		tas.remove(labels[arc.getDestination().getId()]);
+                	}
+                	labels[arc.getDestination().getId()].setCost(newCost);
                     labels[arc.getDestination().getId()].setPere(arc);
+                	tas.insert(labels[arc.getDestination().getId()]);
                 }
+                
                 
             }
             
             //Remove the marked node out of the binary heap
-            tas.remove(labelorigin);
+            tas.deleteMin();
         }
 
 
