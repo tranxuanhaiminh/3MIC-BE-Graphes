@@ -1,6 +1,6 @@
 package org.insa.graphs.model;
 
-public final class Label implements Comparable<Label> {
+public class Label implements Comparable<Label> {
 	
 	//Sommet associé à ce label (sommet ou numéro de sommet).
 	private int sommet;
@@ -9,7 +9,7 @@ public final class Label implements Comparable<Label> {
 	private boolean marque;
 	
 	//Valeur courante du plus court chemin depuis l'origine vers le sommet
-	private double cout;
+	protected double cout;
 	
 	//Correspond au sommet précédent sur le chemin correspondant au plus court chemin courant
 	private Arc pere;
@@ -31,6 +31,11 @@ public final class Label implements Comparable<Label> {
 	public double getCost() {
 		return this.cout;
 	}
+	
+//	//Renvoie le coût total de ce label
+//	public double getTotalCost() {
+//		return this.cout;
+//	}
 	
 	//Renvoie le marque de ce label
 	public boolean getMarque() {

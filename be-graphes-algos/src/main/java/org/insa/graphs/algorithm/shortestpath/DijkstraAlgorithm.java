@@ -71,21 +71,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 double oldCost = labels[arc.getDestination().getId()].getCost();
                 double newCost = labels[node.getId()].getCost() + w;
 
-//                if (Double.isInfinite(oldCost) && Double.isFinite(newCost)) {
-//                    notifyNodeReached(arc.getDestination());
-//                    tas.insert(labels[arc.getDestination().getId()]);
-//                }
-//
-//                // Check if new distances would be better, if so update...
-//                if (newCost < oldCost) {
-//                    labels[arc.getDestination().getId()].setCost(newCost);
-//                    labels[arc.getDestination().getId()].setPere(arc);
-//                }
-                
-                
-                if (newCost < oldCost) {
+                // Check if new distances would be better, if so update...                
+                if (newCost <= oldCost) {
                 	if (!Double.isInfinite(oldCost)) {
                 		tas.remove(labels[arc.getDestination().getId()]);
+                		notifyNodeReached(arc.getDestination());
                 	}
                 	labels[arc.getDestination().getId()].setCost(newCost);
                     labels[arc.getDestination().getId()].setPere(arc);
